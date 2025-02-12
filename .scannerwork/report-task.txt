@@ -1,0 +1,6 @@
+projectKey=taller_reservas
+serverUrl=http://localhost:9000
+serverVersion=25.1.0.102122
+dashboardUrl=http://localhost:9000/dashboard?id=taller_reservas
+ceTaskId=21ae52aa-a90a-4411-86c8-6cbbfefa2537
+ceTaskUrl=http://localhost:9000/api/ce/task?id=21ae52aa-a90a-4411-86c8-6cbbfefa2537
