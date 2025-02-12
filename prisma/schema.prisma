@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  user_id       Int           @id @default(autoincrement())
+  name          String
+  email         String        @unique
+  password      String
+  created_at    DateTime      @default(now())
+
+  // Relación con Reservation y Notification
+  reservations  Reservation[]
+  notifications Notification[]
+}
+
+model Destination {
+  destination_id Int    @id @default(autoincrement())
+  name           String
+  description    String?
+  country        String
+
+  // Relación con Trip
+  trips          Trip[]
+}
+
+model Trip {
+  trip_id        Int      @id @default(autoincrement())
+  destination_id Int
+  departure_date DateTime
+  return_date    DateTime
+  price          Float
+  available_seats Int
+  created_at     DateTime @default(now())
+
+  // Relación con Destination
+  destination    Destination @relation(fields: [destination_id], references: [destination_id])
+
+  // Relación con Reservation
+  reservations   Reservation[]
+}
+
+model Reservation {
+  reservation_id Int    @id @default(autoincrement())
+  user_id        Int
+  trip_id        Int
+  status         String @default("pending")
+  payment_status String @default("pending")
+  created_at     DateTime @default(now())
+
+  // Relación con User y Trip
+  user           User @relation(fields: [user_id], references: [user_id])
+  trip           Trip @relation(fields: [trip_id], references: [trip_id])
+
+  // Relación con Payment
+  payments       Payment[]
+}
+
+model Payment {
+  payment_id     Int    @id @default(autoincrement())
+  reservation_id Int
+  amount         Float
+  payment_method String
+  status         String @default("pending")
+  transaction_id String? @unique
+  created_at     DateTime @default(now())
+
+  // Relación con Reservation
+  reservation    Reservation @relation(fields: [reservation_id], references: [reservation_id])
+}
+
+model Notification {
+  notification_id Int    @id @default(autoincrement())
+  user_id         Int
+  message         String
+  status          String @default("pending")
+  created_at      DateTime @default(now())
+
+  // Relación con User
+  user            User @relation(fields: [user_id], references: [user_id])
+}
